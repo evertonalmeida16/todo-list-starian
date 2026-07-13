@@ -1,0 +1,69 @@
+<section class="todo-page">
+  <header class="todo-page__header">
+    <h1 class="todo-page__title">Checklist</h1>
+    <p class="todo-page__subtitle">Organize suas tarefas do dia</p>
+  </header>
+
+  <form class="todo-form" (ngSubmit)="addTodo()">
+    <label class="todo-form__label" for="new-todo">Nova tarefa</label>
+    <div class="todo-form__row">
+      <input
+        id="new-todo"
+        class="todo-form__input"
+        type="text"
+        name="newTodoTitle"
+        [(ngModel)]="newTodoTitle"
+        placeholder="Digite uma nova tarefa"
+        [disabled]="submitting || loading"
+        autocomplete="off"
+      />
+      <button
+        class="todo-form__submit"
+        type="submit"
+        [disabled]="submitting || loading || !newTodoTitle.trim()"
+      >
+        {{ submitting ? 'Adicionando…' : 'Adicionar' }}
+      </button>
+    </div>
+  </form>
+
+  @if (errorMessage) {
+    <div class="todo-alert" role="alert">
+      <p>{{ errorMessage }}</p>
+      <button type="button" class="todo-alert__retry" (click)="loadTodos()">
+        Tentar novamente
+      </button>
+    </div>
+  }
+
+  <section class="todo-list" aria-live="polite">
+    <div class="todo-list__heading">
+      <h2>Tarefas</h2>
+      @if (!loading) {
+        <span class="todo-list__count">{{ todos.length }}</span>
+      }
+    </div>
+
+    @if (loading) {
+      <p class="todo-list__status">Carregando tarefas…</p>
+    } @else if (todos.length === 0 && !errorMessage) {
+      <p class="todo-list__status">Nenhuma tarefa encontrada.</p>
+    } @else if (todos.length > 0) {
+      <ul class="todo-list__items">
+        @for (todo of todos; track todo.id) {
+          <li class="todo-item" [class.todo-item--completed]="todo.completed">
+            <span class="todo-item__title">{{ todo.title }}</span>
+            <button
+              type="button"
+              class="todo-item__remove"
+              (click)="removeTodo(todo.id)"
+              [disabled]="removingId === todo.id"
+            >
+              {{ removingId === todo.id ? 'Removendo…' : 'Remover' }}
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</section>
