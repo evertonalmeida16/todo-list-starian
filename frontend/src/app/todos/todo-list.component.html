@@ -39,9 +39,19 @@
   <section class="todo-list" aria-live="polite">
     <div class="todo-list__heading">
       <h2>Tarefas</h2>
-      @if (!loading) {
-        <span class="todo-list__count">{{ todos.length }}</span>
-      }
+      <div class="todo-list__heading-actions">
+        @if (!loading) {
+          <span class="todo-list__count">{{ todos.length }}</span>
+        }
+        <button
+          type="button"
+          class="todo-list__complete"
+          (click)="completeSelected()"
+          [disabled]="!hasSelection || completing || loading"
+        >
+          {{ completing ? 'Concluindo…' : 'Concluir tarefas' }}
+        </button>
+      </div>
     </div>
 
     @if (loading) {
@@ -52,12 +62,20 @@
       <ul class="todo-list__items">
         @for (todo of todos; track todo.id) {
           <li class="todo-item" [class.todo-item--completed]="todo.completed">
-            <span class="todo-item__title">{{ todo.title }}</span>
+            <label class="todo-item__select">
+              <input
+                type="checkbox"
+                [checked]="isSelected(todo.id)"
+                (change)="onSelectionChange(todo.id, $event)"
+                [disabled]="todo.completed || completing || removingId === todo.id"
+              />
+              <span class="todo-item__title">{{ todo.title }}</span>
+            </label>
             <button
               type="button"
               class="todo-item__remove"
               (click)="removeTodo(todo.id)"
-              [disabled]="removingId === todo.id"
+              [disabled]="removingId === todo.id || completing"
             >
               {{ removingId === todo.id ? 'Removendo…' : 'Remover' }}
             </button>

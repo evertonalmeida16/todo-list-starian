@@ -12,8 +12,9 @@ API Laravel 11 para gerenciamento de tarefas.
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/tarefas` | Lista tarefas |
+| `GET` | `/api/tarefas` | Lista tarefas (pendentes primeiro) |
 | `POST` | `/api/tarefas` | Cria tarefa (`title` obrigatório) |
+| `POST` | `/api/tarefas/concluir` | Conclui tarefas (`ids: number[]`) |
 | `DELETE` | `/api/tarefas/{id}` | Remove tarefa |
 
 ## Desenvolvimento

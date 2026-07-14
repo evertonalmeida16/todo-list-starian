@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CompleteTarefasRequest;
 use App\Http\Requests\StoreTarefaRequest;
 use App\Http\Resources\TarefaResource;
 use App\Models\Tarefa;
@@ -15,7 +16,10 @@ class TarefaController extends Controller
     public function index(): AnonymousResourceCollection
     {
         return TarefaResource::collection(
-            Tarefa::query()->orderBy('id')->get()
+            Tarefa::query()
+                ->orderBy('completed')
+                ->orderBy('id')
+                ->get()
         );
     }
 
@@ -29,6 +33,22 @@ class TarefaController extends Controller
         return (new TarefaResource($tarefa))
             ->response()
             ->setStatusCode(Response::HTTP_CREATED);
+    }
+
+    public function complete(CompleteTarefasRequest $request): AnonymousResourceCollection
+    {
+        $ids = $request->validated('ids');
+
+        Tarefa::query()
+            ->whereIn('id', $ids)
+            ->update(['completed' => true]);
+
+        $tarefas = Tarefa::query()
+            ->whereIn('id', $ids)
+            ->orderBy('id')
+            ->get();
+
+        return TarefaResource::collection($tarefas);
     }
 
     public function destroy(Tarefa $tarefa): Response

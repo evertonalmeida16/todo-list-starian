@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { CreateTodoPayload, Todo } from '../models/todo.model';
+import { CompleteTodosPayload, CreateTodoPayload, Todo } from '../models/todo.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +19,10 @@ export class TodoService {
 
   createTodo(payload: CreateTodoPayload): Observable<Todo> {
     return this.http.post<Todo>(this.apiUrl, payload);
+  }
+
+  completeTodos(payload: CompleteTodosPayload): Observable<Todo[]> {
+    return this.http.post<Todo[]>(`${this.apiUrl}/concluir`, payload);
   }
 
   deleteTodo(id: number): Observable<void> {

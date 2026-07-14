@@ -29,7 +29,7 @@ describe('TodoService', () => {
   it('should list todos', () => {
     const mockTodos: Todo[] = [
       { id: 1, title: 'Tarefa 1', completed: false },
-      { id: 2, title: 'Tarefa 2', completed: true },
+      { id: 2, title: 'Tarefa 2', completed: false },
     ];
 
     service.getTodos().subscribe((todos) => {
@@ -52,6 +52,22 @@ describe('TodoService', () => {
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ title: 'Nova' });
     req.flush(created);
+  });
+
+  it('should complete todos', () => {
+    const completed: Todo[] = [
+      { id: 1, title: 'Tarefa 1', completed: true },
+      { id: 2, title: 'Tarefa 2', completed: true },
+    ];
+
+    service.completeTodos({ ids: [1, 2] }).subscribe((todos) => {
+      expect(todos).toEqual(completed);
+    });
+
+    const req = httpMock.expectOne(`${apiUrl}/concluir`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ ids: [1, 2] });
+    req.flush(completed);
   });
 
   it('should delete a todo', () => {

@@ -22,8 +22,9 @@ O frontend consome `http://localhost:8000/api/tarefas`.
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/tarefas` | Lista tarefas |
+| `GET` | `/api/tarefas` | Lista tarefas (pendentes primeiro) |
 | `POST` | `/api/tarefas` | Cria tarefa (`title` obrigatório) |
+| `POST` | `/api/tarefas/concluir` | Conclui tarefas (`ids: number[]`) |
 | `DELETE` | `/api/tarefas/{id}` | Remove tarefa |
 
 Resposta no formato `{ id, title, completed }`.

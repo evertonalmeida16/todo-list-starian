@@ -7,3 +7,7 @@ export interface Todo {
 export interface CreateTodoPayload {
   title: string;
 }
+
+export interface CompleteTodosPayload {
+  ids: number[];
+}
